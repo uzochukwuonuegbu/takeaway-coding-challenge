@@ -1,0 +1,32 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+      "tslint-config-airbnb",
+      "tslint:recommended",
+      "tslint-config-prettier"
+    ],
+    "linterOptions": {
+      "exclude": [
+        "src/config/**/*.{ts,js}",
+        "node_modules/**/*.ts",
+        "db/**/*.{ts,js}"
+      ]
+    },
+    "jsRules": {
+      "object-literal-sort-keys": false
+    },
+    "rules": {
+      "arrow-parens": false,
+      "import-name": false,
+      "object-literal-sort-keys": false,
+      "no-trailing-whitespace": true,
+      "variable-name": [false, "allow-leading-underscore"],
+      "interface-name": [false, "never-prefix"],
+      "no-console": false,
+      "max-classes-per-file": [
+        "error",
+        { "ignoreExpressions": true, "max": 2 }
+    ]
+    },
+    "rulesDirectory": []
+  }
