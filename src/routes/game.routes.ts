@@ -8,10 +8,10 @@ const router = Router({
 });
 
 const routes = {
-  startGame: "/games",
-  joinGame: "/games/:id/join",
-  getGames: "/games",
-  getGameById: "/games/:id",
+  startGame: "/game/start",
+  joinGame: "/game/:id/join",
+  makeMove: "/game/:id/:playerId",
+  getGameById: "/game/:id",
 };
 
 router.post(

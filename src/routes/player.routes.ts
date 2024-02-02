@@ -1,25 +1,19 @@
 import { Router } from "express";
-import { getAuthController } from "../dependency-injection";
+import { getPlayerController } from "../dependency-injection";
 
-const ctrl = getAuthController();
+const ctrl = getPlayerController();
 
 const router = Router({
   mergeParams: true
 });
 
 const routes = {
-  register: "/auth/register",
-  login: "/auth/login",
+  register: "/player/register",
 };
 
 router.post(
     routes.register,
     ctrl.register()
-);
-
-router.post(
-  routes.login,
-  ctrl.login()
 );
 
 export default router;

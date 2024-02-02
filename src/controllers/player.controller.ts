@@ -9,8 +9,8 @@ export class PlayerController implements IPlayerController {
     public register(): ExpressRouteFunc {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
-                const { email, password } = req.body;
-                const token = await this.playerService.register(email, password);
+                const { email } = req.body;
+                const token = await this.playerService.register(email);
                 res.status(201).json({ token, status: 201, message: 'success' });
             } catch (err) {
                 logger.errorLog('Unable to register user', {error: err})

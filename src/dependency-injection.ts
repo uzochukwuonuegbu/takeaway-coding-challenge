@@ -1,7 +1,7 @@
 import { GameController } from "./controllers/game.controller";
 import { PlayerController } from "./controllers/player.controller";
 import { IGameController, IGameRepository, IGameService, IPlayerRepository, Player, IPlayerService, IPlayerController } from "./interfaces";
-import { Game, Auth } from './models';
+import { Game } from './models';
 import { GameRepository } from "./repository/game.repository";
 import { PlayerRepository } from "./repository/player.repository";
 import { GameService } from "./services/game.service";

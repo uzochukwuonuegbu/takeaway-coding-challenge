@@ -20,7 +20,7 @@ export interface IGameService {
 }
 
 export interface IPlayerService {
-  register(email: string, password: string): Promise<{ token: string }>;
+  register(email: string): Promise<{ playerId: string }>;
 }
 
 export interface IGameRepository {
