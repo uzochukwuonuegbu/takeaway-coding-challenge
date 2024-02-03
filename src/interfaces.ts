@@ -1,26 +1,36 @@
 import { NextFunction, Request, Response } from 'express-serve-static-core';
 import { Model } from 'sequelize';
+import { JoinGameDto, MakeMoveDto, StartGameDto } from './controllers/dto/game.dto';
 
 export type ExpressRouteFunc = (req: Request, res: Response, next?: NextFunction) => void | Promise<void>;
 
 export interface IGameController {
-  startGane(): ExpressRouteFunc;
+  startGame(): ExpressRouteFunc;
   joinGame(): ExpressRouteFunc;
   getGameById(): ExpressRouteFunc;
+  getGames(): ExpressRouteFunc;
+  makeMove(): ExpressRouteFunc;
 }
 
 export interface IPlayerController {
   // login(): ExpressRouteFunc;
-  register(): ExpressRouteFunc;
+  registerPlayer(): ExpressRouteFunc;
+  getPlayers(): ExpressRouteFunc;
+  getPlayerById(): ExpressRouteFunc;
 }
 
 export interface IGameService {
-  startGame(data: any): Promise<Game>;
-  joinGame(data: any): Promise<Game>;
+  startGame(data: StartGameDto): Promise<Game>;
+  joinGame(id: string, data: JoinGameDto): Promise<string>;
+  makeMove(id: string, playerId: string, data: MakeMoveDto): Promise<Game>;
+  getGameById(id: string): Promise<Game>;
+  getGames(filter: any): Promise<Game[]>;
 }
 
 export interface IPlayerService {
   register(email: string): Promise<{ playerId: string }>;
+  getPlayers(filter: any): Promise<Player[]>;
+  getPlayerById(id: string): Promise<Player>;
 }
 
 export interface IGameRepository {
@@ -33,17 +43,17 @@ export interface IGameRepository {
 }
 
 export interface IPlayerRepository {
-  create(dara: any): Promise<Player>;
+  create(data: any): Promise<Player>;
   findById(id: string): Promise<Player | null>;
   find(query?: any): Promise<Player | null>;
   update(id: string, updates: any): Promise<string>;
   delete(id: string): Promise<void>;
   findAll(query?: any): Promise<Player[]>;
-  findByEmail(email: string): Promise<Player>;
+  findByEmailOrCreate(email: string): Promise<Player>;
 }
 
 // Models
-enum GameStatus {
+export enum GameStatus {
   'progress' = 'progress',
   'finished' = 'finished'
 }
@@ -51,7 +61,7 @@ interface GameAttributes {
   id: string;
   player1: string;
   player2: string;
-  nextMove: string;
+  next_move: string;
   status: GameStatus
   result: number;
   winner?: string;
@@ -71,7 +81,7 @@ export class Game extends Model<GameAttributes> implements GameAttributes {
   public id!: string;
   public player1!: string;
   public player2!: string;
-  public nextMove!: string;
+  public next_move!: string;
   public status!: GameStatus;
   public winner!: string;
   public result!: number;

@@ -10,23 +10,34 @@ const router = Router({
 const routes = {
   startGame: "/game/start",
   joinGame: "/game/:id/join",
-  makeMove: "/game/:id/:playerId",
+  makeMove: "/game/:id/player/:playerId",
   getGameById: "/game/:id",
+  getGames: "/game",
 };
 
 router.post(
     routes.startGame,
-    ctrl.startGane()
+    ctrl.startGame()
 );
 
 router.post(
-  routes.startGame,
+  routes.joinGame,
   ctrl.joinGame()
+);
+
+router.post(
+  routes.makeMove,
+  ctrl.makeMove()
 );
 
 router.get(
   routes.getGameById,
   ctrl.getGameById()
+);
+
+router.get(
+  routes.getGames,
+  ctrl.getGames()
 );
 
 export default router;

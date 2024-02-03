@@ -1,15 +1,24 @@
-import { RecordExistsError } from "../controllers/errorHandler/httpError";
-import { IPlayerRepository, IPlayerService } from "../interfaces";
+import { NotFoundError } from "../controllers/errorHandler/httpError";
+import { IPlayerRepository, IPlayerService, Player } from "../interfaces";
 
 export class PlayerService implements IPlayerService {
   constructor(private playerRepository: IPlayerRepository) {}
 
     public async register(email: string): Promise<{ playerId: string }> {
-      const existingUser = await this.playerRepository.findByEmail(email);
-      if (existingUser) {
-          throw new RecordExistsError('Player already exists');
-      }
-      const player = await this.playerRepository.create({ email });
+      const player = await this.playerRepository.findByEmailOrCreate(email)
       return { playerId: player.id }
+    }
+
+    public async getPlayerById(id: string): Promise<Player> {
+      const player = await this.playerRepository.findById(id)
+      if (!player) {
+        throw new NotFoundError('No Player with this Id found')
+      }
+      return player;
+    }
+
+    public async getPlayers(filter: any): Promise<Player[]> {
+      const players = await this.playerRepository.findAll(filter)
+      return players;
     }
 }

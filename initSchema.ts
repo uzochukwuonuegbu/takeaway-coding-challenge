@@ -8,8 +8,8 @@ async function createSchema() {
 
     // Define your schema creation queries here
     const schemaQueries = [
-      'CREATE TABLE IF NOT EXISTS players (id SERIAL PRIMARY KEY, email VARCHAR(255), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)',
-      'CREATE TABLE IF NOT EXISTS games (id SERIAL PRIMARY KEY, player1_id INTEGER REFERENCES players(id), player2_id INTEGER REFERENCES players(id), status VARCHAR(50) DEFAULT \'pending\', winner INTEGER REFERENCES players(id), nextMove VARCHAR(255) NOT NULL, result INTEGER NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)',
+      'CREATE TABLE IF NOT EXISTS players (id VARCHAR(255) PRIMARY KEY, email VARCHAR(255), created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)',
+      'CREATE TABLE IF NOT EXISTS games (id VARCHAR(255) PRIMARY KEY, player1 VARCHAR(255) REFERENCES players(id), player2 VARCHAR(255) REFERENCES players(id), status VARCHAR(50) DEFAULT \'pending\', winner VARCHAR(255) REFERENCES players(id), next_move VARCHAR(255) REFERENCES players(id), result INTEGER NOT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)',
     ];
 
     for (const query of schemaQueries) {

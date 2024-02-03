@@ -11,7 +11,6 @@ export const getDbClient = (): Client => {
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
   })
-  console.log({ client, pass: process.env.DB_PASS });
 
   return client
 }

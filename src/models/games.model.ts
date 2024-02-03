@@ -22,9 +22,13 @@ Game.init(
             type: DataTypes.TEXT,
             allowNull: false,
           },
-          nextMove: {
-            type: DataTypes.STRING,
-            allowNull: false,
+          next_move: {
+            type: UUIDV4,
+            allowNull: true,
+          },
+          winner: {
+            type: UUIDV4,
+            allowNull: true,
           },
           result: {
             type: DataTypes.NUMBER,

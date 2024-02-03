@@ -17,7 +17,7 @@ Player.init(
       },
       {
         sequelize,
-        tableName: 'player',
+        tableName: 'players',
         timestamps: false,
       }
   );

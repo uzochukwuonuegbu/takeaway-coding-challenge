@@ -6,8 +6,12 @@ export class PlayerRepository extends BaseRepository<Player> implements IPlayerR
       super(dbClient);
     }
 
-    public async findByEmail(email: string): Promise<Player | null> {
+    public async findByEmailOrCreate(email: string): Promise<Player | null> {
       const users = await this.dbClient.findAll({ where: { email } });
-      return users[0] || null;
+      let returnedUser = users[0] || null
+      if (!returnedUser) {
+        returnedUser =await this.dbClient.create({ email })
+      }
+      return returnedUser
     }
   }

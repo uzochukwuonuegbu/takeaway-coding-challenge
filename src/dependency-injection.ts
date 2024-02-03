@@ -20,7 +20,7 @@ export function getPlayerService(): IPlayerService {
 }
 
 export function getGameService(): IGameService {
-    return new GameService(getGameRepository());
+    return new GameService(getGameRepository(), getPlayerRepository());
 }
 
 export function getGameRepository(): IGameRepository {

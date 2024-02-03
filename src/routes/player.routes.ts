@@ -8,12 +8,24 @@ const router = Router({
 });
 
 const routes = {
-  register: "/player/register",
+  register: "/players/register",
+  getPlayerById: "/players/:id",
+  getPlayers: "/players"
 };
+
+router.get(
+  routes.getPlayerById,
+  ctrl.getPlayerById()
+);
+
+router.get(
+  routes.getPlayers,
+  ctrl.getPlayers()
+);
 
 router.post(
     routes.register,
-    ctrl.register()
+    ctrl.registerPlayer()
 );
 
 export default router;
