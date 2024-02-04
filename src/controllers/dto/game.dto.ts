@@ -15,6 +15,10 @@ export class StartGameDto {
 export class JoinGameDto {
     @IsString()
     public player2: string
+
+    @IsNumber()
+    @IsOptional()
+    public inputNumber: number
 }
 
 export class MakeMoveDto {

@@ -18,7 +18,7 @@ export class GameService implements IGameService {
   }
 
   public async joinGame(gameId: string, data: JoinGameDto): Promise<string> {
-    const { player2 } = data
+    const { player2, inputNumber } = data
     const game = await this.gameRepository.findById(gameId)
     if (!game) {
       throw new NotFoundError('No Game with this Id found')
@@ -30,7 +30,21 @@ export class GameService implements IGameService {
       throw new NotFoundError('Game is no long available')
     }
 
-    const updatedGame = await this.gameRepository.update(gameId, { ...game, player2, next_move: player2 });
+    let winner = game.winner;
+    let status = game.status as GameStatus
+    let next_move = game.next_move || player2
+    let gameResult = game.result as number
+
+    if (inputNumber) {
+      gameResult = this.calculateResult(inputNumber, game.result)
+      next_move = game.player1
+    }
+    if (gameResult === 1) {
+      winner = player2
+      status = GameStatus.finished
+    }
+
+    const updatedGame = await this.gameRepository.update(gameId, { player2, winner, status, next_move, result: gameResult });
     return updatedGame;
   }
 

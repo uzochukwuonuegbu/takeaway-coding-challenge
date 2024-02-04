@@ -8,5 +8,9 @@ export const startGameSchema = Joi.object({
 
 export const joinGameSchema = Joi.object({
   player2: Joi.string().required(),
-  startNumber: Joi.number().required(),
+  inpuNumber: Joi.number(),
+});
+
+export const makeMoveSchema = Joi.object({
+  inpuNumber: Joi.number().required(),
 });
