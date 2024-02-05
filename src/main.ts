@@ -20,7 +20,7 @@ server.listen(
 
 
 
-  //  PROOF OF CONCEPT using WS
+  //  PROOF OF CONCEPT using WebSockets
 
 const clients = {}
 const wsServer = new WebSocketServer({ server });
