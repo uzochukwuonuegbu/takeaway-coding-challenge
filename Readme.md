@@ -21,9 +21,7 @@
   --url http://localhost:3000/players/register \
   --header 'Content-Type: application/json' \
   --header 'User-Agent: insomnia/8.6.0' \
-  --data '{
-	"email": "uzo3@gmail.com"
-}'
+  --data ''
 
 2. curl --request GET \
   --url http://localhost:3000/players \
