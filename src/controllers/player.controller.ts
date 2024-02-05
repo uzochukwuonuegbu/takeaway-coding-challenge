@@ -10,7 +10,7 @@ export class PlayerController implements IPlayerController {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
                 const { email } = req.body;
-                const { playerId } = await this.playerService.register(email);
+                const { playerId } = await this.playerService.register({});
                 res.status(201).json({ playerId, status: 201, message: 'success' });
             } catch (err) {
                 logger.errorLog('Unable to register user', {error: err})

@@ -9,11 +9,7 @@ Player.init(
             primaryKey: true,
             defaultValue: UUIDV4,
             allowNull: false,
-          },
-          email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-          },
+          }
       },
       {
         sequelize,

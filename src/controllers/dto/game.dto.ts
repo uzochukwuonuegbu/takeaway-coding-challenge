@@ -19,6 +19,10 @@ export class JoinGameDto {
     @IsNumber()
     @IsOptional()
     public inputNumber: number
+
+    @IsNumber()
+    @IsOptional()
+    public gameId: string
 }
 
 export class MakeMoveDto {

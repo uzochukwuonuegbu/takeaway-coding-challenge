@@ -37,7 +37,7 @@ export class GameController implements IGameController {
                     res.status(400).json({ message: errorMessage });
                 }
                 const { player2, inputNumber }: JoinGameDto = value
-                const result = await this.gameService.joinGame(id, { player2, inputNumber });
+                const result = await this.gameService.joinGame(id, player2, inputNumber);
                 res.status(200).json({ status: 200, message: 'success', data: result });
             } catch (err) {
                 logger.errorLog('Unable to join game', {error: err})
@@ -57,7 +57,7 @@ export class GameController implements IGameController {
                     res.status(400).json({ message: errorMessage });
                 }
                 const { inputNumber }: MakeMoveDto = value
-                const result = await this.gameService.makeMove(id, playerId, { inputNumber });
+                const result = await this.gameService.makeMove(id, playerId, inputNumber);
                 res.status(200).json({ status: 200, message: 'success', data: result });
             } catch (err) {
                 logger.errorLog('Unable to join game', {error: err})

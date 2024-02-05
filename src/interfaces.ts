@@ -21,14 +21,14 @@ export interface IPlayerController {
 
 export interface IGameService {
   startGame(data: StartGameDto): Promise<Game>;
-  joinGame(id: string, data: JoinGameDto): Promise<string>;
-  makeMove(id: string, playerId: string, data: MakeMoveDto): Promise<Game>;
+  joinGame(id: string, playerId: string, inputNumber: number): Promise<Game>;
+  makeMove(id: string, playerId: string, inputNumber: number): Promise<Game>;
   getGameById(id: string): Promise<Game>;
   getGames(filter: any): Promise<Game[]>;
 }
 
 export interface IPlayerService {
-  register(email: string): Promise<{ playerId: string }>;
+  register(connection: any): Promise<{ playerId: string }>;
   getPlayers(filter: any): Promise<Player[]>;
   getPlayerById(id: string): Promise<Player>;
 }
@@ -49,7 +49,7 @@ export interface IPlayerRepository {
   update(id: string, updates: any): Promise<string>;
   delete(id: string): Promise<void>;
   findAll(query?: any): Promise<Player[]>;
-  findByEmailOrCreate(email: string): Promise<Player>;
+  findOrCreate(playerId: string, data: any): Promise<Player>;
 }
 
 // Models
@@ -69,12 +69,10 @@ interface GameAttributes {
 
 interface PlayerAttributes {
   id: string;
-  email: string;
 }
 
 export class Player extends Model<PlayerAttributes> implements PlayerAttributes {
   public id!: string;
-  public email!: string;
 }
 
 export class Game extends Model<GameAttributes> implements GameAttributes {

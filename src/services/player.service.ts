@@ -4,8 +4,8 @@ import { IPlayerRepository, IPlayerService, Player } from "../interfaces";
 export class PlayerService implements IPlayerService {
   constructor(private playerRepository: IPlayerRepository) {}
 
-    public async register(email: string): Promise<{ playerId: string }> {
-      const player = await this.playerRepository.findByEmailOrCreate(email)
+    public async register(data: any): Promise<{ playerId: string }> {
+      const player = await this.playerRepository.create(data)
       return { playerId: player.id }
     }
 

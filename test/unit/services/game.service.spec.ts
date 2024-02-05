@@ -69,6 +69,7 @@ describe('GameService', () => {
         it('should join a game successfully', async () => {
             const gameId = 'gameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 42,
             };
@@ -85,7 +86,7 @@ describe('GameService', () => {
             mockGameRepository.findById = jest.fn().mockReturnValue(mockGame);
             mockGameRepository.update = jest.fn().mockReturnValue({ id: 'xxx' });
 
-            const result = await gameService.joinGame(gameId, data);
+            const result = await gameService.joinGame(gameId, data.player2, data.inputNumber);
 
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).toHaveBeenCalledWith(gameId, {
@@ -95,19 +96,26 @@ describe('GameService', () => {
                 next_move: undefined,
                 result: 67
               });
-            expect(result).toEqual({ id: 'xxx' });
+            expect(result).toEqual({ "_id": "gameId",
+                "next_move": "player1Id",
+                "player2": null,
+                "result": 25,
+                "status": "progress",
+                "winner": null
+            });
         });
 
         it('should throw NotFoundError if the game is not found', async () => {
             const gameId = 'nonexistentGameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 42,
             };
 
             mockGameRepository.findById = jest.fn().mockReturnValue(null);
 
-            await expect(gameService.joinGame(gameId, data)).rejects.toThrowError(NotFoundError);
+            await expect(gameService.joinGame(gameId, data.player2, data.inputNumber)).rejects.toThrowError(NotFoundError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
         });
@@ -115,6 +123,7 @@ describe('GameService', () => {
         it('should throw BadRequestError if the game is already joined', async () => {
             const gameId = 'joinedGameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 42,
             };
@@ -130,7 +139,7 @@ describe('GameService', () => {
 
             mockGameRepository.findById = jest.fn().mockReturnValue(mockJoinedGame);
 
-            await expect(gameService.joinGame(gameId, data)).rejects.toThrowError(BadRequestError);
+            await expect(gameService.joinGame(gameId, data.player2, data.inputNumber)).rejects.toThrowError(BadRequestError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
         });
@@ -138,6 +147,7 @@ describe('GameService', () => {
         it('should throw NotFoundError if the game is finished', async () => {
             const gameId = 'finishedGameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 42,
             };
@@ -153,7 +163,7 @@ describe('GameService', () => {
 
             mockGameRepository.findById = jest.fn().mockReturnValue(mockFinishedGame);
 
-            await expect(gameService.joinGame(gameId, data)).rejects.toThrowError(NotFoundError);
+            await expect(gameService.joinGame(gameId, data.player2, data.inputNumber)).rejects.toThrowError(NotFoundError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
         });
@@ -161,6 +171,7 @@ describe('GameService', () => {
         it('should update the game when inputNumber is provided', async () => {
             const gameId = 'gameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 42,
             };
@@ -175,9 +186,9 @@ describe('GameService', () => {
             };
 
             mockGameRepository.findById = jest.fn().mockReturnValue(mockGame);
-            mockGameRepository.update = jest.fn().mockReturnValue('xxxx');
+            mockGameRepository.update = jest.fn().mockReturnValue({"_id": "gameId", "next_move": "player1Id", "player2": null, "result": 25, "status": "progress", "winner": null});
 
-            const result = await gameService.joinGame(gameId, data);
+            const result = await gameService.joinGame(gameId, data.player2, data.inputNumber);
 
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).toHaveBeenCalledWith(gameId, {
@@ -187,12 +198,13 @@ describe('GameService', () => {
                 next_move: undefined,
                 result: 67
               });
-            expect(result).toEqual('xxxx');
+            expect(result).toEqual({"_id": "gameId", "next_move": "player1Id", "player2": null, "result": 25, "status": "progress", "winner": null});
         });
 
         it('should update the game and set winner if inputNumber results in a win', async () => {
             const gameId = 'gameId';
             const data: JoinGameDto = {
+                gameId,
                 player2: 'player2Id',
                 inputNumber: 1, // Assuming this input results in a win
             };
@@ -207,9 +219,9 @@ describe('GameService', () => {
             };
 
             mockGameRepository.findById = jest.fn().mockReturnValue(mockGame);
-            mockGameRepository.update = jest.fn().mockReturnValue('xxxx');
+            mockGameRepository.update = jest.fn().mockReturnValue({"_id": "gameId", "next_move": "player1Id", "player2": null, "result": 2, "status": "progress", "winner": null});
 
-            const result = await gameService.joinGame(gameId, data);
+            const result = await gameService.joinGame(gameId, data.player2,data.inputNumber);
 
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).toHaveBeenCalledWith(gameId, {
@@ -219,7 +231,7 @@ describe('GameService', () => {
                 next_move: undefined,
                 result: 1,
             });
-            expect(result).toEqual('xxxx');
+            expect(result).toEqual({"_id": "gameId", "next_move": "player1Id", "player2": null, "result": 2, "status": "progress", "winner": null});
         });
     });
 
@@ -249,7 +261,7 @@ describe('GameService', () => {
             mockGameRepository.update = jest.fn().mockReturnValue('qqqq');
             mockPlayerRepository.findById = jest.fn().mockReturnValue(mockPlayer);
 
-            const result = await gameService.makeMove(gameId, playerId, data);
+            const result = await gameService.makeMove(gameId, playerId, data.inputNumber);
 
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).toHaveBeenCalledWith(gameId, {
@@ -278,7 +290,7 @@ describe('GameService', () => {
 
             mockGameRepository.findById = jest.fn().mockReturnValue(null);
 
-            await expect(gameService.makeMove(gameId, playerId, data)).rejects.toThrowError(NotFoundError);
+            await expect(gameService.makeMove(gameId, playerId, data.inputNumber)).rejects.toThrowError(NotFoundError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
         });
@@ -302,7 +314,7 @@ describe('GameService', () => {
 
             mockGameRepository.findById = jest.fn().mockReturnValue(mockFinishedGame);
 
-            await expect(gameService.makeMove(gameId, playerId, data)).rejects.toThrowError(NotFoundError);
+            await expect(gameService.makeMove(gameId, playerId, data.inputNumber)).rejects.toThrowError(NotFoundError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
         });
@@ -327,7 +339,7 @@ describe('GameService', () => {
             mockGameRepository.findById = jest.fn().mockReturnValue(mockGame);
             mockPlayerRepository.findById = jest.fn().mockReturnValue(null);
 
-            await expect(gameService.makeMove(gameId, playerId, data)).rejects.toThrowError(NotFoundError);
+            await expect(gameService.makeMove(gameId, playerId, data.inputNumber)).rejects.toThrowError(NotFoundError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
             expect(mockPlayerRepository.findById).toHaveBeenCalledWith(playerId);
@@ -356,7 +368,7 @@ describe('GameService', () => {
             mockGameRepository.findById = jest.fn().mockReturnValue(mockGame);
             mockPlayerRepository.findById = jest.fn().mockReturnValue(mockPlayer);
 
-            await expect(gameService.makeMove(gameId, playerId, data)).rejects.toThrowError(BadRequestError);
+            await expect(gameService.makeMove(gameId, playerId, data.inputNumber)).rejects.toThrowError(BadRequestError);
             expect(mockGameRepository.findById).toHaveBeenCalledWith(gameId);
             expect(mockGameRepository.update).not.toHaveBeenCalled();
             expect(mockPlayerRepository.findById).toHaveBeenCalledWith(playerId);

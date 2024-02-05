@@ -1,4 +1,4 @@
-import { JoinGameDto, MakeMoveDto, StartGameDto } from "../controllers/dto/game.dto";
+import { StartGameDto } from "../controllers/dto/game.dto";
 import { BadRequestError, NotFoundError } from "../controllers/errorHandler/httpError";
 import { Game, GameStatus, IGameRepository, IGameService, IPlayerRepository } from "../interfaces";
 
@@ -12,13 +12,11 @@ export class GameService implements IGameService {
       throw new NotFoundError('Must have at least one player')
     }
 
-    const game = await this.gameRepository.create({ player1, player2, startNumber, next_move: player2, status: 'progress', result: startNumber, winner: null });
-    // send notification to player2
+    const game = await this.gameRepository.create({ player1, player2, startNumber, next_move: player2 || null, status: 'progress', result: startNumber, winner: null });
     return game;
   }
 
-  public async joinGame(gameId: string, data: JoinGameDto): Promise<string> {
-    const { player2, inputNumber } = data
+  public async canJoinGame(gameId: string): Promise<Game> {
     const game = await this.gameRepository.findById(gameId)
     if (!game) {
       throw new NotFoundError('No Game with this Id found')
@@ -29,27 +27,10 @@ export class GameService implements IGameService {
     if (game.status === GameStatus.finished) {
       throw new NotFoundError('Game is no long available')
     }
-
-    let winner = game.winner;
-    let status = game.status as GameStatus
-    let next_move = game.next_move || player2
-    let gameResult = game.result as number
-
-    if (inputNumber) {
-      gameResult = this.calculateResult(inputNumber, game.result)
-      next_move = game.player1
-    }
-    if (gameResult === 1) {
-      winner = player2
-      status = GameStatus.finished
-    }
-
-    const updatedGame = await this.gameRepository.update(gameId, { player2, winner, status, next_move, result: gameResult });
-    return updatedGame;
+    return game
   }
 
-  public async makeMove(id: string, playerId: string, data: MakeMoveDto): Promise<Game> {
-    const { inputNumber } = data
+  public async canMakeMove(id: string, playerId: string): Promise<Game> {
     const game = await this.gameRepository.findById(id)
     if (!game) {
       throw new NotFoundError('No Game with this Id found')
@@ -66,6 +47,31 @@ export class GameService implements IGameService {
     if (game.next_move && (player.id !== game.next_move)) {
       throw new BadRequestError('Not this player turn')
     }
+    return game
+  }
+
+  public async joinGame(gameId: string, player2: string, inputNumber: number): Promise<Game> {
+    const game = await this.canJoinGame(gameId)
+    let winner = game.winner;
+    let status = game.status as GameStatus
+    let next_move = game.next_move || player2
+    let gameResult = game.result as number
+
+    if (inputNumber) {
+      gameResult = this.calculateResult(inputNumber, game.result)
+      next_move = game.player1
+    }
+    if (gameResult === 1) {
+      winner = player2
+      status = GameStatus.finished
+    }
+
+    await this.gameRepository.update(gameId, { player2, winner, status, next_move, result: gameResult });
+    return await this.gameRepository.findById(gameId)
+  }
+
+  public async makeMove(id: string, playerId: string, inputNumber: number): Promise<Game> {
+    const game = await this.canMakeMove(id, playerId)
     const next_move = game?.next_move === game.player1 ? game.player2 : game.player1;
 
     const gameResult = this.calculateResult(inputNumber, game.result)

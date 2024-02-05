@@ -70,7 +70,7 @@ describe('GameController', () => {
     
             await gameController.joinGame()(reqMock as any, resMock as any, nextMock);
 
-            expect(mockGameService.joinGame).toHaveBeenCalledWith('gameId', { player2: 'player2Id', inputNumber: 42 });
+            expect(mockGameService.joinGame).toHaveBeenCalledWith('gameId', 'player2Id', 42);
             expect(resMock.status).toHaveBeenCalledWith(200);
             expect(resMock.json).toHaveBeenCalledWith({ status: 200, message: 'success', data: undefined });
             expect(nextMock).not.toHaveBeenCalled();
@@ -119,7 +119,7 @@ describe('GameController', () => {
     
             await gameController.makeMove()(reqMock as any, resMock as any, nextMock);
 
-            expect(mockGameService.makeMove).toHaveBeenCalledWith('gameId', 'playerId', { inputNumber: 42 });
+            expect(mockGameService.makeMove).toHaveBeenCalledWith('gameId', 'playerId', 42);
             expect(resMock.status).toHaveBeenCalledWith(200);
             expect(resMock.json).toHaveBeenCalledWith({ status: 200, message: 'success', data: undefined });
             expect(nextMock).not.toHaveBeenCalled();

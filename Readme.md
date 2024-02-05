@@ -63,6 +63,26 @@
 	"inputNumber": 20
 }'
 
+Testing using webSockets: 
+ Domain Events - 
+  - {
+    "type": "start-game",
+    "startNumber": 25,
+    "player1": "609ad316-7e2d-4b2c-be0c-bbe477a10cfd"
+    }
+  - {
+    "type": "join-game",
+    "gameId": "591ff1bd-c302-43eb-a321-8958b32b84e6",
+    "playerId": "c27df9de-aec3-412a-a17f-2dfc7b7ea46a",
+    "inputNumber": 0
+    }
+  - {
+    "type": "make-move",
+    "gameId": "591ff1bd-c302-43eb-a321-8958b32b84e6",
+    "playerId": "c27df9de-aec3-412a-a17f-2dfc7b7ea46a",
+    "inputNumber": 0
+    }
+
 ## Testing
 
   Unit Tests: 
