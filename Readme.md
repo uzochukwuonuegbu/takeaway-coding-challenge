@@ -18,6 +18,7 @@
 *The server should now be running on http://localhost:3000*
 
 
+Basic Architecture Diagram: https://github.com/uzochukwuonuegbu/takeaway-coding-challenge/issues/1#issue-2119291574
 
 ## Endpoints(Samples)
 
