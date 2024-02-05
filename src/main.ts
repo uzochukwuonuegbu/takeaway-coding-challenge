@@ -66,13 +66,12 @@ wsServer.on('connection', (socket) => {
   });
 
   socket.on("disconnect", () => {
-    socket.send('Cient disconnected')
-
     // Proof of concept
     // send others a notification ---
     Object.values(clients).map((client: any) => {
       client.send(JSON.stringify({ type: `player-disconnected-${playerId}`}))
     })
+    socket.send('Cient disconnected')
     // save some metadata?
   });
 });
